@@ -14,16 +14,20 @@ def scrape_page(url):
         if is_allowed_by_robots(url):
             # Parsear el contenido HTML de la página con BeautifulSoup
             soup = BeautifulSoup(response.text, 'html.parser')
-            links = soup.find_all('a', href=lambda href: href and 'MLC' in href)
-             # Mostrar el contenido de links
+            links = soup.find_all('a', href=lambda href: href)
+            # Mostrar el contenido de links
             print("Enlaces encontrados:")
-            for link in links:
-                print(link.get('href'))
+            if links:
+                for link in links:
+                    print(link.get('href'))
         else:
             print(f'Acceso no permitido por robots.txt para {url}')
-
     else:
         print(f'Error al hacer la solicitud HTTP. Código de estado: {response.status_code}')
+    
+    # Imprimir el contenido HTML para depuración
+    print("Contenido HTML de la página:")
+    print(response.text[:500])  # Imprimir los primeros 500 caracteres del HTML
 
 def is_allowed_by_robots(url):
     # Get the base URL
