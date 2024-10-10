@@ -84,7 +84,7 @@ def cargar_pdf_a_gemini(ruta_pdf):
         return None
 
 def main():
-    url = 'https://www.diariooficial.interior.gob.cl/edicionelectronica/index.php?date=09-10-2024&edition=43969'
+    url = 'https://www.diariooficial.interior.gob.cl/edicionelectronica/'
 
     if is_allowed_by_robots(url):
         pdf_urls = scrape_page_for_pdf(url)
