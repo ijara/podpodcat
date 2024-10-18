@@ -1,11 +1,10 @@
 import requests
-import google.generativeai as genai
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import os
 import tempfile
 import io
-from dotenv import load_dotenv
+import ollama
 from pypdf import PdfReader
 
 def scrape_page_for_pdf(url):
@@ -64,7 +63,7 @@ def descargar_pdfs(pdf_urls, modo_prueba=True):
     print("Modo de prueba: Se ha descargado solo un PDF." if modo_prueba else f"Todos los PDFs han sido descargados en: {temp_dir}")
     return temp_dir
 
-def cargar_pdf_a_gemini(ruta_pdf):
+def cargar_pdf_a_ollama(ruta_pdf):
     try:
         with open(ruta_pdf, 'rb') as archivo:
             contenido_pdf = archivo.read()
@@ -73,9 +72,8 @@ def cargar_pdf_a_gemini(ruta_pdf):
         texto_pdf = "".join(pagina.extract_text() for pagina in pdf_reader.pages)
         
         print(f"Texto extraído del PDF: {os.path.basename(ruta_pdf)}")
-        modelo = genai.GenerativeModel('gemini-1.5-flash')
         
-        respuesta = modelo.generate_content(texto_pdf)
+        respuesta = ollama.generate(model='llama3', prompt=texto_pdf)
         
         print(f"PDF cargado exitosamente: {os.path.basename(ruta_pdf)}")
         return respuesta
@@ -91,30 +89,25 @@ def main():
         carpeta_temporal = descargar_pdfs(pdf_urls)
         print(f"Los PDFs se han descargado en: {carpeta_temporal}")
 
-        load_dotenv()
-        genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-        
-        respuestas_gemini = []
+        respuestas_ollama = []
         for archivo in os.listdir(carpeta_temporal):
             if archivo.endswith('.pdf'):
                 ruta_completa = os.path.join(carpeta_temporal, archivo)
-                respuesta = cargar_pdf_a_gemini(ruta_completa)
+                respuesta = cargar_pdf_a_ollama(ruta_completa)
                 if respuesta:
-                    respuestas_gemini.append(respuesta)
+                    respuestas_ollama.append(respuesta)
         
-        print(f"Se han cargado {len(respuestas_gemini)} PDFs a Gemini.")
+        print(f"Se han cargado {len(respuestas_ollama)} PDFs a Ollama.")
         
         with open('prompt.txt', 'r', encoding='utf-8') as archivo_prompt:
             instrucciones_podcast = archivo_prompt.read()
         
-        modelo_conversacion = genai.GenerativeModel('gemini-pro')
+        contexto_completo = "\n".join([str(resp) for resp in respuestas_ollama]) + "\n\n" + instrucciones_podcast
         
-        contexto_completo = "\n".join([str(resp) for resp in respuestas_gemini]) + "\n\n" + instrucciones_podcast
-        
-        conversacion_podcast = modelo_conversacion.generate_content(contexto_completo)
+        conversacion_podcast = ollama.generate(model='llama3', prompt=contexto_completo)
         
         print("Conversación estilo podcast generada:")
-        print(conversacion_podcast.text)
+        print(conversacion_podcast['response'])
     else:
         print(f'Acceso no permitido por robots.txt para {url}')
 
