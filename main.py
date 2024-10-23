@@ -63,6 +63,25 @@ def descargar_pdfs(pdf_urls, modo_prueba=True):
     print("Modo de prueba: Se ha descargado solo un PDF." if modo_prueba else f"Todos los PDFs han sido descargados en: {temp_dir}")
     return temp_dir
 
+def explicar_proceso_a_ollama():
+    instrucciones = """
+    Estás a punto de comenzar un proceso de análisis de documentos oficiales del Diario Oficial de Chile.
+    Tu tarea será:
+    1. Leer y comprender el contenido de los PDFs descargados.
+    2. Identificar información relevante sobre nuevas leyes, decretos o regulaciones.
+    3. Resumir los puntos clave de cada documento.    
+    Por favor, confirma que has entendido estas instrucciones y estás listo para comenzar el análisis.
+    """
+    respuesta = ollama.chat(model='llama3', messages=[
+        {
+            'role': 'user',
+            'content': instrucciones
+        }
+    ])
+    print("Respuesta de Ollama:")
+    print(respuesta['message']['content'])
+
+
 def cargar_pdf_a_ollama(ruta_pdf):
     try:
         with open(ruta_pdf, 'rb') as archivo:
@@ -73,12 +92,17 @@ def cargar_pdf_a_ollama(ruta_pdf):
         
         print(f"Texto extraído del PDF: {os.path.basename(ruta_pdf)}")
         
-        respuesta = ollama.generate(model='llama3', prompt=texto_pdf)
+        respuesta = ollama.chat(model='llama3', messages=[
+            {
+                'role': 'user',
+                'content': texto_pdf
+            }
+        ])
         
-        print(f"PDF cargado exitosamente: {os.path.basename(ruta_pdf)}")
+        print(f"PDF incrustado exitosamente: {os.path.basename(ruta_pdf)}")
         return respuesta
     except Exception as e:
-        print(f"Error al cargar el PDF {os.path.basename(ruta_pdf)}: {str(e)}")
+        print(f"Error al incrustar el PDF {os.path.basename(ruta_pdf)}: {str(e)}")
         return None
 
 def main():
@@ -89,6 +113,8 @@ def main():
         carpeta_temporal = descargar_pdfs(pdf_urls)
         print(f"Los PDFs se han descargado en: {carpeta_temporal}")
 
+        
+        explicar_proceso_a_ollama()
         respuestas_ollama = []
         for archivo in os.listdir(carpeta_temporal):
             if archivo.endswith('.pdf'):
@@ -100,14 +126,19 @@ def main():
         print(f"Se han cargado {len(respuestas_ollama)} PDFs a Ollama.")
         
         with open('prompt.txt', 'r', encoding='utf-8') as archivo_prompt:
-            instrucciones_podcast = archivo_prompt.read()
+            instrucciones = archivo_prompt.read()
         
-        contexto_completo = "\n".join([str(resp) for resp in respuestas_ollama]) + "\n\n" + instrucciones_podcast
+        contexto_completo = "\n".join([str(resp) for resp in respuestas_ollama]) + "\n\n" + instrucciones
         
-        conversacion_podcast = ollama.generate(model='llama3', prompt=contexto_completo)
+        respuesta = ollama.chat(model='llama3', messages=[
+            {
+                'role': 'user',
+                'content': instrucciones
+            }
+        ])
         
-        print("Conversación estilo podcast generada:")
-        print(conversacion_podcast['response'])
+        print("Conversación generada:")
+        print(respuesta)
     else:
         print(f'Acceso no permitido por robots.txt para {url}')
 
