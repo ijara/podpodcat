@@ -132,7 +132,13 @@ def main():
         print("Respuestas de ChatGPT:")
         for respuesta in respuestas_chatgpt:
             print(respuesta)
-        contexto_completo = "\n".join(respuestas_chatgpt)
+        
+        # Asegúrate de que respuestas_chatgpt sea una lista de cadenas
+        # Si respuestas_chatgpt es una lista de listas, aplana la lista
+        if isinstance(respuestas_chatgpt, list) and all(isinstance(item, list) for item in respuestas_chatgpt):
+            respuestas_chatgpt = [item for sublist in respuestas_chatgpt for item in sublist]  # Aplanar la lista
+
+        contexto_completo = "\n".join(respuestas_chatgpt)  # Ahora debería funcionar correctamente
         
         fecha_actual = datetime.datetime.now().strftime("%Y%m%d")  # Cambiar a datetime.datetime
         directorio_diario = "daily"
