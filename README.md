@@ -9,3 +9,6 @@
     - pip install podcastfy
 	- pip freeze > requirements.txt
 	- pip install -r requirements.txt
+
+## to do
+- rename config.py.bak to config.py
