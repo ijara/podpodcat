@@ -7,6 +7,10 @@ import io
 from pypdf import PdfReader
 import openai
 from openai import OpenAI
+import datetime  # Añadir esta línea al inicio del archivo
+
+# Variable global para el modelo
+modelo_global = "gpt-3.5-turbo"
 
 def scrape_page_for_pdf(url):
     print(f"Intentando acceder a la página: {url}")
@@ -72,23 +76,6 @@ def descargar_pdfs(pdf_urls, modo_prueba=False):
     print("Modo de prueba: Se ha descargado solo un PDF." if modo_prueba else f"Todos los PDFs han sido descargados en: {temp_dir}")
     return temp_dir
 
-def explicar_proceso_a_chatgpt():
-    print("Explicando el proceso a ChatGPT...")
-    client = OpenAI(api_key=openai.api_key)  # Asegúrate de que la clave API esté configurada
-    instrucciones = """
-   Te entregare informacion, quiero que vayas agregando esta informacion hasta que indique el comando [end-info].
-    """
-    respuesta = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "Eres un asistente especializado en análisis de documentos legales."},
-            {"role": "user", "content": instrucciones}
-        ]
-    )
-    # Actualiza esta línea para acceder correctamente al contenido de la respuesta
-    print("Respuesta de ChatGPT:")
-    print(respuesta.choices[0].message.content)  # Cambia esto para acceder al contenido de la respuesta
-
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
     try:
@@ -100,21 +87,24 @@ def cargar_pdf_a_chatgpt(ruta_pdf):
         
         print(f"Texto extraído del PDF: {os.path.basename(ruta_pdf)}")
         
-        # Limitar el texto a un tamaño manejable
+        # Dividir el texto en partes manejables
         max_tokens = 4096  # Ajusta este valor según el modelo
-        if len(texto_pdf.split()) > max_tokens:
-            texto_pdf = " ".join(texto_pdf.split()[:max_tokens])  # Truncar el texto
-
-        respuesta = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "genera un newsletter, que separe esta informacion de la siguiente forma: cada cve debe ser explicado en base a la documentacion entregada"},
-                {"role": "user", "content": texto_pdf}
-            ]
-        )
+        partes_texto = [texto_pdf[i:i+max_tokens] for i in range(0, len(texto_pdf), max_tokens)]
+        
+        respuestas = []
+        for parte in partes_texto:
+            respuesta = openai.chat.completions.create(
+                model=modelo_global,  # Usando la variable global para el modelo
+                messages=[
+                    {"role": "system", "content": "explica cada cve en base a la documentacion entregada"},
+                    {"role": "user", "content": parte}
+                ]
+            )
+            
+            respuestas.append(respuesta.choices[0].message.content)
         
         print(f"PDF analizado exitosamente: {os.path.basename(ruta_pdf)}")
-        return respuesta.choices[0].message.content
+        return respuestas
     except Exception as e:
         print(f"Error al analizar el PDF {os.path.basename(ruta_pdf)}: {str(e)}")
         return None
@@ -139,17 +129,26 @@ def main():
                     respuestas_chatgpt.append(respuesta)
         
         print(f"Se han analizado {len(respuestas_chatgpt)} PDFs con ChatGPT.")
-        
-        with open('prompt.txt', 'r', encoding='utf-8') as archivo_prompt:
-            instrucciones = archivo_prompt.read()
         print("Respuestas de ChatGPT:")
         for respuesta in respuestas_chatgpt:
             print(respuesta)
-        contexto_completo = "\n".join(respuestas_chatgpt) + "\n\n" + instrucciones
+        contexto_completo = "\n".join(respuestas_chatgpt)
         
+        fecha_actual = datetime.datetime.now().strftime("%Y%m%d")  # Cambiar a datetime.datetime
+        directorio_diario = "daily"
+        nombre_archivo = f"newsletter_{fecha_actual}.txt"
+        ruta_completa_archivo = os.path.join(directorio_diario, nombre_archivo)
+        
+        if not os.path.exists(directorio_diario):
+            os.makedirs(directorio_diario)
+        
+        with open(ruta_completa_archivo, 'w', encoding='utf-8') as archivo:
+            archivo.write(contexto_completo)
+        
+        print(f"Contexto completo guardado en: {ruta_completa_archivo}")
         client = OpenAI(api_key=openai.api_key)  # Asegúrate de que la clave API esté configurada
         respuesta_final = client.chat.completions.create(  # Cambia openai por client
-            model="gpt-3.5-turbo",
+            model=modelo_global,  # Usando la variable global para el modelo
             messages=[
                 {"role": "system", "content": "genera un newsletter, que separe esta informacion de la siguiente forma: cada cve debe ser explicado en base a la documentacion entregada"},
                 {"role": "user", "content": contexto_completo}

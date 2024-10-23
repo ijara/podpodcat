@@ -1,1 +1,0 @@
-[end-info] INSTRUCTION: resume la informacion del dia de hoy separandolo por temas, cada tema tiene que tener un titulo y una descripcion de 2 parrafos sobre el tema
