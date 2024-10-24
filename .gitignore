@@ -164,3 +164,4 @@ cython_debug/
 #added by ijara
 .env
 config.py
+daily/

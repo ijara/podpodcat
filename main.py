@@ -10,7 +10,7 @@ from openai import OpenAI
 import datetime  # Añadir esta línea al inicio del archivo
 
 # Variable global para el modelo
-modelo_global = "gpt-3.5-turbo"
+modelo_global = "gpt-4o-mini"
 
 def scrape_page_for_pdf(url):
     print(f"Intentando acceder a la página: {url}")
@@ -48,33 +48,33 @@ def is_allowed_by_robots(url):
         print(f"Error al acceder a robots.txt para {url}. Se asume permiso.")
         return True
 
-def descargar_pdfs(pdf_urls, modo_prueba=False):
-    print("Creando carpeta temporal...")
-    temp_dir = tempfile.mkdtemp()
-    print(f"Carpeta temporal creada: {temp_dir}")
+def descargar_pdfs(pdf_urls):
+    print("Creando carpeta para PDFs...")
+    carpeta_pdf = os.path.join(os.getcwd(), 'pdf')
+    os.makedirs(carpeta_pdf, exist_ok=True)
+    
+    carpeta_dia = os.path.join(carpeta_pdf, datetime.datetime.now().strftime("%Y%m%d"))
+    os.makedirs(carpeta_dia, exist_ok=True)
+    print(f"Carpeta para PDFs creada: {carpeta_dia}")
     
     for i, pdf_url in enumerate(pdf_urls):
         print(f"Intentando descargar PDF: {pdf_url}")
         try:
             response = requests.get(pdf_url)
             if response.status_code == 200:
-                filename = f"documento_{i+1}.pdf"
-                filepath = os.path.join(temp_dir, filename)
+                filename = os.path.basename(pdf_url)
+                filepath = os.path.join(carpeta_dia, filename)
                 
                 with open(filepath, 'wb') as f:
                     f.write(response.content)
                 print(f"PDF descargado: {filename}")
-                
-                if modo_prueba:
-                    print("Modo de prueba activado. Se detendrá después de descargar un PDF.")
-                    break
             else:
                 print(f"Error al descargar {pdf_url}. Código de estado: {response.status_code}")
         except Exception as e:
             print(f"Error al descargar {pdf_url}: {str(e)}")
     
-    print("Modo de prueba: Se ha descargado solo un PDF." if modo_prueba else f"Todos los PDFs han sido descargados en: {temp_dir}")
-    return temp_dir
+    print(f"Todos los PDFs han sido descargados en: {carpeta_dia}")
+    return carpeta_dia
 
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
