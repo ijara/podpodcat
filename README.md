@@ -1,4 +1,8 @@
 # podpodcat
+### ultima version
+
+{% include daily/latest.md %}
+
 ## Comandos
 - Actualizar el sistema: `sudo apt-get update`
 - Instalar Python3, pip y ffmpeg: `sudo apt-get install  python3 python3-pip ffmpeg`
