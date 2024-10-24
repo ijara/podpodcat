@@ -1,7 +1,7 @@
 # podpodcat
 ### ultima version
 
-{% include daily\latest.md %}
+{% include daily/latest.md %}
 
 ## Comandos
 - Actualizar el sistema: `sudo apt-get update`
