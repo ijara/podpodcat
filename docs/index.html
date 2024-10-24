@@ -10,7 +10,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        fetch('../daily/latest.md')
+        fetch('latest.md')
             .then(response => response.text())
             .then(markdownContent => {
                 const contentElement = document.getElementById('content');
