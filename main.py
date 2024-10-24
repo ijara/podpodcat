@@ -100,12 +100,12 @@ def cargar_pdf_a_chatgpt(ruta_pdf):
             respuesta = openai.chat.completions.create(
                 model=modelo_global,  # Usando la variable global para el modelo
                 messages=[
-                    {"role": "system", "content": "explica cada cve en base a la documentacion entregada"},
+                    {"role": "system", "content": f"este es el CVE:{os.path.basename(ruta_pdf)}: resume la informacion en no mas de 1 parrafo, output using markdown "},
                     {"role": "user", "content": parte}
                 ]
             )
             respuestas.append(respuesta.choices[0].message.content)
-            print(f"{os.path.basename(ruta_pdf)}: respuesta.choices[0].message.content")
+            print(f"{os.path.basename(ruta_pdf)}: {respuesta.choices[0].message.content}\n")
         print(f"PDF analizado exitosamente: {os.path.basename(ruta_pdf)}")
         return respuestas
     except Exception as e:
@@ -145,7 +145,7 @@ def main():
         
         fecha_actual = datetime.datetime.now().strftime("%Y%m%d")  # Cambiar a datetime.datetime
         directorio_diario = "daily"
-        nombre_archivo = f"newsletter_{fecha_actual}.txt"
+        nombre_archivo = f"newsletter_{fecha_actual}.md"
         ruta_completa_archivo = os.path.join(directorio_diario, nombre_archivo)
         
         if not os.path.exists(directorio_diario):
@@ -153,21 +153,28 @@ def main():
         
         with open(ruta_completa_archivo, 'w', encoding='utf-8') as archivo:
             archivo.write(contexto_completo)
+        nombre_archivo_latest = "latest.md"
+        ruta_completa_archivo_latest = os.path.join(directorio_diario, nombre_archivo_latest)
         
+        with open(ruta_completa_archivo_latest, 'w', encoding='utf-8') as archivo_latest:
+            archivo_latest.write(contexto_completo)
+        print(f"Versión más reciente guardada en: {ruta_completa_archivo_latest}")
         print(f"Contexto completo guardado en: {ruta_completa_archivo}")
-        client = OpenAI(api_key=openai.api_key)  # Asegúrate de que la clave API esté configurada
-        respuesta_final = client.chat.completions.create(  # Cambia openai por client
-            model=modelo_global,  # Usando la variable global para el modelo
-            messages=[
-                {"role": "system", "content": "en base a la conversacion sostenida"},
-                {"role": "user", "content": "cada cve debe ser explicado en base a la documentacion entregada"}
-            ]
-        )
+        # Comenta la creación del cliente y la obtención de la respuesta final
+        # client = OpenAI(api_key=openai.api_key)  # Asegúrate de que la clave API esté configurada
+        # respuesta_final = client.chat.completions.create(  # Cambia openai por client
+        #     model=modelo_global,  # Usando la variable global para el modelo
+        #     messages=[
+        #         {"role": "system", "content": "en base a la conversacion sostenida"},
+        #         {"role": "user", "content": "cada cve debe ser explicado en base a la documentacion entregada"}
+        #     ]
+        # )
         
         # Acceder al contenido de la respuesta correctamente
-        contenido_respuesta_final = respuesta_final.choices[0].message.content
-        print("Resumen generado:")
-        print(contenido_respuesta_final)
+        #contenido_respuesta_final = respuesta_final.choices[0].message.content
+        #print("Resumen generado:")
+        #print(contenido_respuesta_final)
+        print("EOL")
     else:
         print(f'Acceso no permitido por robots.txt para {url}')
 
