@@ -100,7 +100,7 @@ def cargar_pdf_a_chatgpt(ruta_pdf):
             respuesta = openai.chat.completions.create(
                 model=modelo_global,  # Usando la variable global para el modelo
                 messages=[
-                    {"role": "system", "content": f"este es el CVE:{os.path.basename(ruta_pdf)}: resume la informacion en no mas de 1 parrafo, output using markdown "},
+                    {"role": "system", "content": f"este es el CVE:{os.path.basename(ruta_pdf)}: resume la informacion con titulo y descripcion, no mas de 2 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, output using html5 "},
                     {"role": "user", "content": parte}
                 ]
             )
@@ -144,7 +144,7 @@ def main():
         contexto_completo = "\n".join(respuestas_chatgpt)  # Ahora debería funcionar correctamente
         
         fecha_actual = datetime.datetime.now().strftime("%Y%m%d")  # Cambiar a datetime.datetime
-        directorio_diario = "daily"
+        directorio_diario = "docs"
         nombre_archivo = f"newsletter_{fecha_actual}.md"
         ruta_completa_archivo = os.path.join(directorio_diario, nombre_archivo)
         
@@ -153,7 +153,7 @@ def main():
         
         with open(ruta_completa_archivo, 'w', encoding='utf-8') as archivo:
             archivo.write(contexto_completo)
-        nombre_archivo_latest = "latest.md"
+        nombre_archivo_latest = "latest.html"
         ruta_completa_archivo_latest = os.path.join(directorio_diario, nombre_archivo_latest)
         
         with open(ruta_completa_archivo_latest, 'w', encoding='utf-8') as archivo_latest:
