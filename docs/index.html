@@ -1,6 +1,21 @@
-<title>Text</title>
-<p>Lorem ipsum</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to HTML</title>
+</head>
+<body>
+    <div id="content"></div>
 
-
-{% include /../daily/latest.md %}
-
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        fetch('../daily/latest.md')
+            .then(response => response.text())
+            .then(markdownContent => {
+                const contentElement = document.getElementById('content');
+                contentElement.innerHTML = marked.parse(markdownContent);
+            });
+    </script>
+</body>
+</html>
