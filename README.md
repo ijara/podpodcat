@@ -12,3 +12,9 @@
 
 ## to do
 - rename config.py.bak to config.py
+
+## things to remember
+- buscar la forma de que el mensaje de commit sea autogenerado por llm
+- reestructurar la consulta
+	- idea! verificar si es posible que la informacion que ya haya sido subida, sea recordada, en base a eso consultar por un resumen, sin tener que volver a cargar toda la info
+	- quitar puntos innecesarios como alzamientos, presuntas muertes, temas no relevantes con el objetivo principal
