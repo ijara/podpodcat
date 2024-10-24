@@ -59,12 +59,16 @@ def descargar_pdfs(pdf_urls):
     
     for i, pdf_url in enumerate(pdf_urls):
         print(f"Intentando descargar PDF: {pdf_url}")
+        filename = os.path.basename(pdf_url)
+        filepath = os.path.join(carpeta_dia, filename)
+        
+        if os.path.exists(filepath):
+            print(f"El PDF {filename} ya ha sido descargado.")
+            continue
+        
         try:
             response = requests.get(pdf_url)
             if response.status_code == 200:
-                filename = os.path.basename(pdf_url)
-                filepath = os.path.join(carpeta_dia, filename)
-                
                 with open(filepath, 'wb') as f:
                     f.write(response.content)
                 print(f"PDF descargado: {filename}")
@@ -156,8 +160,8 @@ def main():
         respuesta_final = client.chat.completions.create(  # Cambia openai por client
             model=modelo_global,  # Usando la variable global para el modelo
             messages=[
-                {"role": "system", "content": "genera un newsletter, que separe esta informacion de la siguiente forma: cada cve debe ser explicado en base a la documentacion entregada"},
-                {"role": "user", "content": contexto_completo}
+                {"role": "system", "content": "en base a la conversacion sostenida"},
+                {"role": "user", "content": "cada cve debe ser explicado en base a la documentacion entregada"}
             ]
         )
         
