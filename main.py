@@ -104,9 +104,8 @@ def cargar_pdf_a_chatgpt(ruta_pdf):
                     {"role": "user", "content": parte}
                 ]
             )
-            
             respuestas.append(respuesta.choices[0].message.content)
-        
+            print(f"{os.path.basename(ruta_pdf)}: respuesta.choices[0].message.content")
         print(f"PDF analizado exitosamente: {os.path.basename(ruta_pdf)}")
         return respuestas
     except Exception as e:
