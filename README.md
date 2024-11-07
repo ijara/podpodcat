@@ -10,6 +10,7 @@
 - Crear y activar el entorno virtual: 
     - `python3 -m venv .venv`
     - `source .venv/bin/activate`
+    - `.\.venv\Scripts\Activate.ps1` #windows
 - Instalar podcastfy: `pip install podcastfy`
 - Guardar los requisitos en un archivo: `pip freeze > requirements.txt`
 - Instalar los requisitos desde el archivo: `pip install -r requirements.txt`
