@@ -8,6 +8,7 @@ from pypdf import PdfReader
 import openai
 from openai import OpenAI
 import datetime  # Añadir esta línea al inicio del archivo
+import sys
 
 # Variable global para el modelo
 modelo_global = "gpt-4o-mini"
@@ -82,6 +83,7 @@ def descargar_pdfs(pdf_urls):
 
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
+    instruccion = "resume la informacion con titulo y descripcion, no mas de 2 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, output using html5 only p and h1 tags, los cve no estan relacionados con temas de ciberseguridad"
     try:
         with open(ruta_pdf, 'rb') as archivo:
             contenido_pdf = archivo.read()
@@ -95,24 +97,53 @@ def cargar_pdf_a_chatgpt(ruta_pdf):
         max_tokens = 4096  # Ajusta este valor según el modelo
         partes_texto = [texto_pdf[i:i+max_tokens] for i in range(0, len(texto_pdf), max_tokens)]
         
-        respuestas = []
-        for parte in partes_texto:
+        if len(partes_texto) > 1:
+            respuestas = []
+            for parte in partes_texto:
+                respuesta = openai.chat.completions.create(
+                    model=modelo_global,  # Usando la variable global para el modelo
+                    messages=[
+                        {"role": "system", "content": f"este es el CVE:{os.path.basename(ruta_pdf)}: {instruccion}"},
+                        {"role": "user", "content": parte}
+                    ]
+                )
+                respuestas.append(respuesta.choices[0].message.content)
+                print(f"{os.path.basename(ruta_pdf)}: {respuesta.choices[0].message.content}\n")
+            
+            # Volver a cargar todas las respuestas con la misma instrucción
+            respuesta_final = openai.chat.completions.create(
+                model=modelo_global,  # Usando la variable global para el modelo
+                messages=[
+                    {"role": "system", "content": f"este es el CVE:{os.path.basename(ruta_pdf)}: {instruccion}"},
+                    {"role": "user", "content": "\n".join(respuestas)}
+                ]
+            )
+            print(f"PDF analizado exitosamente: {os.path.basename(ruta_pdf)}")
+            return respuesta_final.choices[0].message.content
+        else:
             respuesta = openai.chat.completions.create(
                 model=modelo_global,  # Usando la variable global para el modelo
                 messages=[
-                    {"role": "system", "content": f"este es el CVE:{os.path.basename(ruta_pdf)}: resume la informacion con titulo y descripcion, no mas de 2 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, output using html5 "},
-                    {"role": "user", "content": parte}
+                    {"role": "system", "content": f"este es el CVE:{os.path.basename(ruta_pdf)}: {instruccion}"},
+                    {"role": "user", "content": texto_pdf}
                 ]
             )
-            respuestas.append(respuesta.choices[0].message.content)
-            print(f"{os.path.basename(ruta_pdf)}: {respuesta.choices[0].message.content}\n")
-        print(f"PDF analizado exitosamente: {os.path.basename(ruta_pdf)}")
-        return respuestas
+            print(f"PDF analizado exitosamente: {os.path.basename(ruta_pdf)}")
+            return respuesta.choices[0].message.content
     except Exception as e:
         print(f"Error al analizar el PDF {os.path.basename(ruta_pdf)}: {str(e)}")
         return None
 
 def main():
+    debug = True  # Variable de depuración
+
+    if debug:
+        print("Modo de depuración activado.")
+
+        sys.exit()
+  
+
+    # Continuar con el código original
     url = 'https://www.diariooficial.interior.gob.cl/edicionelectronica/'
 
     print(f"Intentando acceder a la URL: {url}")
@@ -142,6 +173,8 @@ def main():
             respuestas_chatgpt = [item for sublist in respuestas_chatgpt for item in sublist]  # Aplanar la lista
 
         contexto_completo = "\n".join(respuestas_chatgpt)  # Ahora debería funcionar correctamente
+        contexto_completo = contexto_completo.replace("```html", "")
+        contexto_completo = contexto_completo.replace("```", "")
         
         fecha_actual = datetime.datetime.now().strftime("%Y%m%d")  # Cambiar a datetime.datetime
         directorio_diario = "docs"
@@ -158,6 +191,8 @@ def main():
         
         with open(ruta_completa_archivo_latest, 'w', encoding='utf-8') as archivo_latest:
             archivo_latest.write(contexto_completo)
+
+        
         print(f"Versión más reciente guardada en: {ruta_completa_archivo_latest}")
         print(f"Contexto completo guardado en: {ruta_completa_archivo}")
         # Comenta la creación del cliente y la obtención de la respuesta final

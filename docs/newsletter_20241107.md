@@ -1,14 +1,14 @@
-
+```html
 <h1>Resumen del CVE:2564692</h1>
 <p>El CVE:2564692 es un documento que aborda la vulnerabilidad en un software, la cual puede ser aprovechada por un atacante para acceder de manera indebida a información sensible y realizar acciones no autorizadas dentro del sistema. Esto puede comprometer la seguridad y funcionamiento del programa, poniendo en riesgo la información de los usuarios y la integridad del sistema en su conjunto.</p>
 
 <p>Se recomienda a los administradores y desarrolladores de software aplicar las actualizaciones de seguridad disponibles de inmediato para mitigar este riesgo. Estas actualizaciones están diseñadas específicamente para corregir esta vulnerabilidad y evitar que los sistemas queden expuestos a ataques que podrían causar daños significativos.</p>
-
-
+```
+```html
 <h1>CVE 2565002: Informe sobre Precios de Sustancias Metálicas y No Metálicas</h1>
 <p>El CVE 2565002 es un informe del Ministerio de Minería y la Comisión Chilena del Cobre que detalla los precios de referencia de metales y no metales para el tercer trimestre de 2024. Esta publicación es obligatoria y ayuda a asesorar al Servicio de Impuestos Internos sobre el royalty minero, y se debe hacer pública en el Diario Oficial de Chile dentro de los primeros 15 días del mes siguiente al trimestre correspondiente.</p>
 <p>El documento está respaldado por leyes y decretos, y se puede verificar su autenticidad en el sitio web oficial. La resolución está firmada electrónicamente y requiere un código para acceso en el portal www.diarioficial.cl, garantizando así la transparencia y el acceso a la información pública en Chile.</p>
-
+```
 <h1>CVE 2565102 - Prealerta Acuícola en Chile</h1>
 <p>El 8 de octubre de 2024, se emitió una resolución que declara una prealerta en el sector acuícola de Chile, estableciendo diversas medidas para manejar la situación. Esta medida se basa en el Reglamento Ambiental de la Acuicultura del Ministerio de Economía, Fomento y Turismo, y anula resoluciones anteriores relacionadas con la misma temática emitidas en 2023 y 2024.</p>
 <p>La resolución fue firmada por Soledad Tapia, Directora Nacional del Servicio Nacional de Pesca y Acuicultura, y su contenido completo está disponible en los sitios oficiales del organismo correspondiente. Esta acción busca proteger el medio ambiente acuático y regular las actividades en el sector de la acuicultura.</p>
