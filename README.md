@@ -17,7 +17,6 @@ https://ijara.github.io/podpodcat/
 - Renombrar `config.py.bak` a `config.py`
 
 ## Cosas para recordar
-- Buscar la forma de que el mensaje de commit sea autogenerado por llm
-- Reestructurar la consulta
-	- Verificar si es posible recordar la información ya subida para consultar un resumen, sin tener que volver a cargar toda la información
-	- Quitar puntos innecesarios como alzamientos, presuntas muertes, temas no relevantes con el objetivo principal
+- refinar las consultas
+- que funcione solo
+- que me lo mande por correo
