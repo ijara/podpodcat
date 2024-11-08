@@ -3,16 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/css/foundation.min.css" integrity="sha256-ogmFxjqiTMnZhxCqVmcqTj0aF1SdUeMPk+WPN/6E5w= sha384-9FBOUNzOvqqlc5ChiR5LblQPhoa8hSXMaYdac5PWGOb48Ga7ojL/BQ1M6gfkU4I" crossorigin="anonymous">
-</head>
+    <title>PodPodCat - lector de diario oficial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.2.3/motion-ui.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-prototype.min.css">
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+    <!-- optional CDN for Foundation Icons ^^ --></head>
 <body>
-    <div class="grid-container">
-        <div class="grid-x grid-margin-x">
-            <div id="latest" class="cell">
-            </div>
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <ul class="menu">
+                <li class="menu-text">
+                    PodPodCat
+                </li>
+                <li class=>
+                    <a href="https:\/\/www.diariooficial.interior.gob.cl/edicionelectronica/">diario oficial</a>
+                </li>
+            </ul>
         </div>
     </div>
+    <div class="callout large primary">
+        <div class="text-center">
+            <h1>PodPodCat</h1>
+            <h2 class="subheader">lector diario oficial chile</h2>
+        </div>
+    </div>
+    <article class="grid-container">
+        <div class="grid-x align-center">
+            <div class="cell medium-8" >
+                <div class="blog-post">
+                    <p class="float-left">Resumen</p>
+                    <p class="float-right" id="fecha"></p>
+                    <script>
+                        document.getElementById('fecha').textContent = new Date().toLocaleDateString();
+                    </script>
+                    <hr>
+                    <div id="latest" class=""/>
+                    <hr>
+                </div>
+            </div>
+        <hr>
+
     <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/js/foundation.min.js" integrity="sha256-pRF3z5Mq+NO33k5G/BL+RfZ9UP/sSJnDfNqZAC/BNnQ= sha384-6OBHO6AvrFqAcELVG1hgX1nGkAPsJ6tKE+Zs5yL4gAixvD25mLgSqNEBD63szOK" crossorigin="anonymous"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -29,8 +60,39 @@
         .catch(error => {
             console.error('Error:', error);
         });
+    fetch('fecha.html')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar el archivo fecha.html');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('fecha').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });    
 });
 
     </script>
+    <footer>
+        <div class="grid-x align-justify align-middle">
+            <div class="small-12 medium-shrink cell">
+              <ul class="menu">
+                <li class="align-self-middle">PodPodCat</li>
+                <li><a href="#">About</a></li>
+                <li><a href="mailto:ijara756@gmail.com">Contact</a></li>
+                <li><a href="https://github.com/ijara/podpodcat">Code</a></li>
+              </ul>
+            </div>
+      
+            <div class="small-12 medium-shrink cell">
+              <span>creado en 2024 con ✨</span>
+            </div>
+          </div>
+    </footer>
+
+</article>
 </body>
 </html>

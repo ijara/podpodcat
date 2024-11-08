@@ -178,7 +178,7 @@ def main():
         
         fecha_actual = datetime.datetime.now().strftime("%Y%m%d")  # Cambiar a datetime.datetime
         directorio_diario = "docs"
-        nombre_archivo = f"newsletter_{fecha_actual}.md"
+        nombre_archivo = f"newsletter_{fecha_actual}.html"
         ruta_completa_archivo = os.path.join(directorio_diario, nombre_archivo)
         
         if not os.path.exists(directorio_diario):

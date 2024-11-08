@@ -1,8 +1,6 @@
 # podpodcat
 ### ultima version
-
-{% include _includes/daily/latest.md %}
-
+https://ijara.github.io/podpodcat/
 ## Comandos
 - Actualizar el sistema: `sudo apt-get update`
 - Instalar Python3, pip y ffmpeg: `sudo apt-get install  python3 python3-pip ffmpeg`
