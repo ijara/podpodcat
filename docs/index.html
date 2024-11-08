@@ -9,11 +9,28 @@
 <body>
     <div class="grid-container">
         <div class="grid-x grid-margin-x">
-            <div class="cell">
-                <object data="latest.html" type="text/html"></object>
+            <div id="latest" class="cell">
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/js/foundation.min.js" integrity="sha256-pRF3z5Mq+NO33k5G/BL+RfZ9UP/sSJnDfNqZAC/BNnQ= sha384-6OBHO6AvrFqAcELVG1hgX1nGkAPsJ6tKE+Zs5yL4gAixvD25mLgSqNEBD63szOK" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    fetch('latest.html')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar el archivo latest.html');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('latest').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+
+    </script>
 </body>
 </html>
