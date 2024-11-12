@@ -108,7 +108,13 @@ def enviar_email(texto):
         username=EMAIL_USER,
         password=EMAIL_PASSWORD,
     )
-    email.receivers = ['ijara756@icloud.com']
+    
+    # Example emails.txt content:
+    # ijara756@icloud.com
+    # another@email.com
+    # third@email.com
+    with open('emails.txt', 'r') as f:
+        email.receivers = [line.strip() for line in f if line.strip()]
     email.send(
         subject="Newsletter Diario Oficial - " + datetime.datetime.now().strftime("%Y%m%d"),
         html=texto
