@@ -100,16 +100,11 @@ def descargar_pdfs(pdf_urls):
     
     print(f"Todos los PDFs han sido descargados en: {carpeta_dia}")
     return carpeta_dia
-def enviar_email(texto):
-    from redmail import EmailSender
-    email = EmailSender(
-        
-    )
 
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
-    instruccion = "resume la informacion con titulo y descripcion, no mas de 2 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, si existen requisitos, deberes o derechos debe listarlos usando el tag li, output using html5 only p and h1 tags, los cve no estan relacionados con temas de ciberseguridad, descarta firma electronica aprobaciones o similares, titulo llamativo en <h1>, secciones tituladas en <h2> y parrafos explicativos en <p>"
-    try:
+    instruccion = "resume la informacion con titulo y descripcion, no mas de 3 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, output using html5 only p and h1 tags, los cve no estan relacionados con temas de ciberseguridad, descarta firma electronica aprobaciones o similares, titulo llamativo en <h1>, secciones tituladas en <h2> y parrafos explicativos en <p>"
+    try:        
         with open(ruta_pdf, 'rb') as archivo:
             contenido_pdf = archivo.read()
         
@@ -180,12 +175,15 @@ def main():
 
         #explicar_proceso_a_chatgpt()
         respuestas_chatgpt = []
-        for archivo in os.listdir(carpeta_temporal):
-            if archivo.endswith('.pdf'):
-                ruta_completa = os.path.join(carpeta_temporal, archivo)
-                respuesta = cargar_pdf_a_chatgpt(ruta_completa)
-                if respuesta:
-                    respuestas_chatgpt.append(respuesta)
+        # Obtener y ordenar los archivos PDF numéricamente
+        archivos_pdf = [f for f in os.listdir(carpeta_temporal) if f.endswith('.pdf')]
+        archivos_pdf.sort(key=lambda x: int(''.join(filter(str.isdigit, x)) or 0))
+        
+        for archivo in archivos_pdf:
+            ruta_completa = os.path.join(carpeta_temporal, archivo)
+            respuesta = cargar_pdf_a_chatgpt(ruta_completa)
+            if respuesta:
+                respuestas_chatgpt.append(respuesta)
         
         print(f"Se han analizado {len(respuestas_chatgpt)} PDFs con ChatGPT.")
         print("Respuestas de ChatGPT:")
@@ -234,7 +232,6 @@ def main():
         #contenido_respuesta_final = respuesta_final.choices[0].message.content
         #print("Resumen generado:")
         #print(contenido_respuesta_final)
-        enviar_email(contexto_completo)
         print("EOL")
 
     else:
