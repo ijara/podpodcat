@@ -9,11 +9,15 @@ import openai
 from openai import OpenAI
 import datetime  # Añadir esta línea al inicio del archivo
 import sys
+import locale
 
 # Variable global para el modelo
 modelo_global = "gpt-4o-mini"
 
 def scrape_page_for_pdf(url):
+    # Establecer la configuración regional a español
+    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Asegúrate de que esta configuración esté disponible en tu sistema
+
     print(f"Intentando acceder a la página: {url}")
     response = requests.get(url)
     pdf_urls = []
@@ -21,10 +25,21 @@ def scrape_page_for_pdf(url):
     if response.status_code == 200:
         print(f"Acceso exitoso a la página. Código de estado: {response.status_code}")
         if is_allowed_by_robots(url):
-            print("Verificando permisos de robots.txt...")
             soup = BeautifulSoup(response.text, 'html.parser')
+            #fecha
+            fecha = soup.find_all('li', class_='date')
+            # Limpiar el texto de la fecha para eliminar espacios y saltos de línea
+            fecha_texto = fecha[0].text.strip()  # Eliminar espacios y saltos de línea
+            fecha_especifica = datetime.datetime.strptime(fecha_texto, "%A %d de %B de %Y")
+            # Fecha actual
+            fecha_hoy = datetime.datetime.now()
+            # Comparar las fechas
+            if fecha_hoy.date() == fecha_especifica.date():
+                print("Las fechas son iguales.")
+            else:
+                print("Las fechas son diferentes.")
+                sys.exit()
             links = soup.find_all('a', href=lambda href: href and href.lower().endswith('.pdf'))
-            
             for link in links:
                 pdf_url = urljoin(url, link.get('href'))
                 pdf_urls.append(pdf_url)
@@ -80,6 +95,8 @@ def descargar_pdfs(pdf_urls):
     
     print(f"Todos los PDFs han sido descargados en: {carpeta_dia}")
     return carpeta_dia
+def enviar_email(texto):
+    from redmail import EmailSender
 
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
@@ -209,7 +226,9 @@ def main():
         #contenido_respuesta_final = respuesta_final.choices[0].message.content
         #print("Resumen generado:")
         #print(contenido_respuesta_final)
+        enviar_email(contexto_completo)
         print("EOL")
+
     else:
         print(f'Acceso no permitido por robots.txt para {url}')
 
