@@ -9,13 +9,12 @@ https://ijara.github.io/podpodcat/
     - `python3 -m venv .venv`
     - `source .venv/bin/activate`
     - `.\.venv\Scripts\Activate.ps1` #windows
-- Instalar podcastfy: `pip install podcastfy`
 - Guardar los requisitos en un archivo: `pip freeze > requirements.txt`
 - Instalar los requisitos desde el archivo: `pip install -r requirements.txt`
 
 ## Por hacer
 - Renombrar `config.py.bak` a `config.py`
-
+- Renombrar `emails.txt.bak` a `emails.txt`
 ## Cosas para recordar
 - refinar las consultas
 - que funcione solo
