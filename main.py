@@ -173,7 +173,7 @@ def cargar_pdf_a_chatgpt(ruta_pdf):
         return None
 
 def main():
-    debug = True  # Variable de depuración
+    debug = False  # Variable de depuración
 
     if debug:
         print("Modo de depuración activado.")
