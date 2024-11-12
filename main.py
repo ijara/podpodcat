@@ -97,6 +97,9 @@ def descargar_pdfs(pdf_urls):
     return carpeta_dia
 def enviar_email(texto):
     from redmail import EmailSender
+    email = EmailSender(
+        
+    )
 
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
