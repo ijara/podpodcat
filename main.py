@@ -100,6 +100,7 @@ def descargar_pdfs(pdf_urls):
     
     print(f"Todos los PDFs han sido descargados en: {carpeta_dia}")
     return carpeta_dia
+
 def enviar_email(texto):
     from redmail import EmailSender
     email = EmailSender(
@@ -119,6 +120,7 @@ def enviar_email(texto):
         subject="Newsletter Diario Oficial - " + datetime.datetime.now().strftime("%Y%m%d"),
         html=texto
     )
+
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
     instruccion = "resume la informacion con titulo y descripcion, no mas de 2 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, si existen requisitos, deberes o derechos debe listarlos usando el tag li, output using html5 only p and h1 tags, los cve no estan relacionados con temas de ciberseguridad, descarta firma electronica aprobaciones o similares"
@@ -256,7 +258,6 @@ def main():
         #contenido_respuesta_final = respuesta_final.choices[0].message.content
         #print("Resumen generado:")
         #print(contenido_respuesta_final)
-        enviar_email(contexto_completo)
         print("EOL")
 
     else:
