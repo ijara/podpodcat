@@ -100,11 +100,7 @@ def descargar_pdfs(pdf_urls):
     
     print(f"Todos los PDFs han sido descargados en: {carpeta_dia}")
     return carpeta_dia
-def enviar_email(texto):
-    from redmail import EmailSender
-    email = EmailSender(
-        
-    )
+
 
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
@@ -234,7 +230,6 @@ def main():
         #contenido_respuesta_final = respuesta_final.choices[0].message.content
         #print("Resumen generado:")
         #print(contenido_respuesta_final)
-        enviar_email(contexto_completo)
         print("EOL")
 
     else:
