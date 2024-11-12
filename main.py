@@ -7,7 +7,7 @@ import io
 from pypdf import PdfReader
 import openai
 from openai import OpenAI
-import datetime  # Añadir esta línea al inicio del archivo
+import datetime  
 import sys
 import locale
 
@@ -36,6 +36,11 @@ def scrape_page_for_pdf(url):
             # Comparar las fechas
             if fecha_hoy.date() == fecha_especifica.date():
                 print("Las fechas son iguales.")
+                # Verificar si existe el archivo de la newsletter
+                newsletter_file = f'/docs/newsletter_{fecha_especifica.strftime("%Y%m%d")}'
+                if os.path.exists(newsletter_file):
+                    print(f"El archivo de la newsletter {newsletter_file} ya existe.")
+                    sys.exit()
             else:
                 print("Las fechas son diferentes.")
                 sys.exit()
@@ -103,7 +108,7 @@ def enviar_email(texto):
 
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
-    instruccion = "resume la informacion con titulo y descripcion, no mas de 2 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, output using html5 only p and h1 tags, los cve no estan relacionados con temas de ciberseguridad"
+    instruccion = "resume la informacion con titulo y descripcion, no mas de 2 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, si existen requisitos, deberes o derechos debe listarlos usando el tag li, output using html5 only p and h1 tags, los cve no estan relacionados con temas de ciberseguridad, descarta firma electronica aprobaciones o similares"
     try:
         with open(ruta_pdf, 'rb') as archivo:
             contenido_pdf = archivo.read()
