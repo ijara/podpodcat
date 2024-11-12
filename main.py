@@ -101,6 +101,26 @@ def descargar_pdfs(pdf_urls):
     print(f"Todos los PDFs han sido descargados en: {carpeta_dia}")
     return carpeta_dia
 
+def enviar_email(texto):
+    from redmail import EmailSender
+    email = EmailSender(
+        host="smtp.gmail.com",
+        port=587,
+        username=EMAIL_USER,
+        password=EMAIL_PASSWORD,
+    )
+    
+    # Example emails.txt content:
+    # ijara756@icloud.com
+    # another@email.com
+    # third@email.com
+    with open('emails.txt', 'r') as f:
+        email.receivers = [line.strip() for line in f if line.strip()]
+    email.send(
+        subject="Newsletter Diario Oficial - " + datetime.datetime.now().strftime("%Y%m%d"),
+        html=texto
+    )
+
 def cargar_pdf_a_chatgpt(ruta_pdf):
     print(f"Intentando cargar PDF a ChatGPT: {os.path.basename(ruta_pdf)}")
     instruccion = "resume la informacion con titulo y descripcion, no mas de 3 parrafos, debe ser facil de entender y sin tecnicismos, debe explicar lo sucede, output using html5 only p and h1 tags, los cve no estan relacionados con temas de ciberseguridad, descarta firma electronica aprobaciones o similares, titulo llamativo en <h1>, secciones tituladas en <h2> y parrafos explicativos en <p>"
@@ -159,7 +179,16 @@ def main():
 
     if debug:
         print("Modo de depuración activado.")
-
+        try:
+            with open('docs/latest.html', 'r', encoding='utf-8') as archivo:
+                contenido = archivo.read()
+                print("Contenido de latest.html:")
+                print(contenido)
+                enviar_email(contenido)
+        except FileNotFoundError:
+            print("El archivo docs/latest.html no existe")
+        except Exception as e:
+            print(f"Error al leer el archivo: {str(e)}")
         sys.exit()
   
 
@@ -239,5 +268,6 @@ def main():
 
 if __name__ == "__main__":
     from config import OPENAI_API_KEY  # Importa la clave API desde un archivo de configuración
+    from config import EMAIL_USER, EMAIL_PASSWORD
     openai.api_key = OPENAI_API_KEY  # Usa la variable importada para la API key de OpenAI
     main()
