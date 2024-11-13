@@ -1,7 +1,1 @@
-#!/bin/sh
-source .venv/bin/activate
-if python main.py; then
-    git add .
-    git commit -m "sync_$(date +'%Y%m%d')"
-    git push
-fi
+*/1 * * * * /bin/sh -c 'source .venv/bin/activate && python main.py && git add . && git commit -m "sync_$(date +\'%Y%m%d\')" && git push'
