@@ -6,7 +6,7 @@ git pull >> /home/ijara756/podpodcat/output.txt 2>&1
 echo "Activando entorno virtual..." >> /home/ijara756/podpodcat/output.txt
 source /home/ijara756/podpodcat/.venv/bin/activate
 echo "Ejecutando main.py..." >> /home/ijara756/podpodcat/output.txt
-python /home/ijara756/podpodcat/main.py >> /home/ijara756/podpodcat/output.txt 2>&1
+/home/ijara756/podpodcat/.venv/bin/python /home/ijara756/podpodcat/main.py >> /home/ijara756/podpodcat/output.txt 2>&1
 echo "Agregando cambios..." >> /home/ijara756/podpodcat/output.txt
 git add . >> /home/ijara756/podpodcat/output.txt 2>&1
 echo "Commit de cambios..." >> /home/ijara756/podpodcat/output.txt
