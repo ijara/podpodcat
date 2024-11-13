@@ -167,3 +167,4 @@ config.py
 #daily/
 pdf/
 emails.txt
+output.txt
