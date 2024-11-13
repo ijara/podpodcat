@@ -40,10 +40,10 @@ def scrape_page_for_pdf(url):
                 newsletter_file = f'/docs/newsletter_{fecha_especifica.strftime("%Y%m%d")}'
                 if os.path.exists(newsletter_file):
                     print(f"El archivo de la newsletter {newsletter_file} ya existe.")
-                    sys.exit()
+                    sys.exit(0)
             else:
                 print("Las fechas son diferentes.")
-                sys.exit()
+                sys.exit(0)
             links = soup.find_all('a', href=lambda href: href and href.lower().endswith('.pdf'))
             for link in links:
                 pdf_url = urljoin(url, link.get('href'))
@@ -189,7 +189,7 @@ def main():
             print("El archivo docs/latest.html no existe")
         except Exception as e:
             print(f"Error al leer el archivo: {str(e)}")
-        sys.exit()
+        sys.exit(0)
   
 
     # Continuar con el código original
@@ -262,7 +262,7 @@ def main():
         #print("Resumen generado:")
         #print(contenido_respuesta_final)
         print("EOL")
-
+        sys.exit(1)
     else:
         print(f'Acceso no permitido por robots.txt para {url}')
 
