@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "Iniciando sincronización..." >> /home/ijara756/podpodcat//home/ijara756/podpodcat/output.txt
+echo "Iniciando sincronización..." >> /home/ijara756/podpodcat/home/ijara756/podpodcat/output.txt
 date >> /home/ijara756/podpodcat/output.txt
 git pull >> /home/ijara756/podpodcat/output.txt 2>&1
 echo "Activando entorno virtual..." >> /home/ijara756/podpodcat/output.txt
