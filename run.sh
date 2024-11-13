@@ -1,1 +1,1 @@
-*/1 * * * * /bin/sh -c 'git pull && source .venv/bin/activate && python main.py && git add . && git commit -m "sync_$(date +\'%Y%m%d\')" && git push'
+*/1 * * * * /bin/sh -c 'echo "Iniciando sincronización..."; git pull; echo "Activando entorno virtual..."; source .venv/bin/activate; echo "Ejecutando main.py..."; python main.py; echo "Agregando cambios..."; git add .; echo "Commit de cambios..."; git commit -m "sync_$(date +\'%Y%m%d\')"; echo "Enviando cambios..."; git push; echo "Sincronización completada."'
