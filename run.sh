@@ -1,4 +1,5 @@
 #!/bin/sh
+cd /home/ijara756/podpodcat/
 echo "Iniciando sincronización..." >> /home/ijara756/podpodcat/home/ijara756/podpodcat/output.txt
 date >> /home/ijara756/podpodcat/output.txt
 git pull >> /home/ijara756/podpodcat/output.txt 2>&1
