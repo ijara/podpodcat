@@ -41,9 +41,9 @@ def scrape_page_for_pdf(url):
             if os.path.exists(newsletter_file):
                 print(f"El archivo de la newsletter {newsletter_file} ya existe.")
                 sys.exit(0)
-            else:
-                print("Las fechas son diferentes.")
-                sys.exit(0)
+        else:
+            print("Las fechas son diferentes.")
+            sys.exit(0)
         links = soup.find_all('a', href=lambda href: href and href.lower().endswith('.pdf'))
         for link in links:
             pdf_url = urljoin(url, link.get('href'))
