@@ -261,7 +261,8 @@ def main():
         #contenido_respuesta_final = respuesta_final.choices[0].message.content
         #print("Resumen generado:")
         #print(contenido_respuesta_final)
-        print("EOL")
+        print("Enviar email")
+        enviar_email(contexto_completo)
         sys.exit(1)
     else:
         print(f'Acceso no permitido por robots.txt para {url}')
