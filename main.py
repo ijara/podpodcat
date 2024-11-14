@@ -36,7 +36,7 @@ def scrape_page_for_pdf(url):
         if fecha_hoy.date() == fecha_especifica.date():
             print("Las fechas son iguales.")
             # Verificar si existe el archivo de la newsletter
-            newsletter_file = f'/docs/newsletter_{fecha_especifica.strftime("%Y%m%d")}.html'
+            newsletter_file = f'docs/newsletter_{fecha_especifica.strftime("%Y%m%d")}.html'
             print(newsletter_file)
             if os.path.exists(newsletter_file):
                 print(f"El archivo de la newsletter {newsletter_file} ya existe.")
