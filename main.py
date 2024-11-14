@@ -24,35 +24,33 @@ def scrape_page_for_pdf(url):
 
     if response.status_code == 200:
         print(f"Acceso exitoso a la página. Código de estado: {response.status_code}")
-        if is_allowed_by_robots(url):
-            soup = BeautifulSoup(response.text, 'html.parser')
-            #fecha
-            fecha = soup.find_all('li', class_='date')
-            # Limpiar el texto de la fecha para eliminar espacios y saltos de línea
-            fecha_texto = fecha[0].text.strip()  # Eliminar espacios y saltos de línea
-            fecha_especifica = datetime.datetime.strptime(fecha_texto, "%A %d de %B de %Y")
-            # Fecha actual
-            fecha_hoy = datetime.datetime.now()
-            # Comparar las fechas
-            if fecha_hoy.date() == fecha_especifica.date():
-                print("Las fechas son iguales.")
-                # Verificar si existe el archivo de la newsletter
-                newsletter_file = f'/docs/newsletter_{fecha_especifica.strftime("%Y%m%d")}.html'
-                print(newsletter_file)
-                if os.path.exists(newsletter_file):
-                    print(f"El archivo de la newsletter {newsletter_file} ya existe.")
-                    sys.exit(0)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        #fecha
+        fecha = soup.find_all('li', class_='date')
+        # Limpiar el texto de la fecha para eliminar espacios y saltos de línea
+        fecha_texto = fecha[0].text.strip()  # Eliminar espacios y saltos de línea
+        fecha_especifica = datetime.datetime.strptime(fecha_texto, "%A %d de %B de %Y")
+        # Fecha actual
+        fecha_hoy = datetime.datetime.now()
+        # Comparar las fechas
+        if fecha_hoy.date() == fecha_especifica.date():
+            print("Las fechas son iguales.")
+            # Verificar si existe el archivo de la newsletter
+            newsletter_file = f'/docs/newsletter_{fecha_especifica.strftime("%Y%m%d")}.html'
+            print(newsletter_file)
+            if os.path.exists(newsletter_file):
+                print(f"El archivo de la newsletter {newsletter_file} ya existe.")
+                sys.exit(0)
             else:
                 print("Las fechas son diferentes.")
                 sys.exit(0)
-            links = soup.find_all('a', href=lambda href: href and href.lower().endswith('.pdf'))
-            for link in links:
-                pdf_url = urljoin(url, link.get('href'))
-                pdf_urls.append(pdf_url)
+        links = soup.find_all('a', href=lambda href: href and href.lower().endswith('.pdf'))
+        for link in links:
+            pdf_url = urljoin(url, link.get('href'))
+            pdf_urls.append(pdf_url)
             
-            print(f"Se encontraron {len(pdf_urls)} enlaces a archivos PDF.")
-        else:
-            print(f'Acceso no permitido por robots.txt para {url}')
+        print(f"Se encontraron {len(pdf_urls)} enlaces a archivos PDF.")
+        
     else:
         print(f'Error al hacer la solicitud HTTP. Código de estado: {response.status_code}')
     
